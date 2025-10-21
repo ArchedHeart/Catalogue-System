@@ -16,6 +16,15 @@ def save_catalogues(catalogues):
 def prompt_name() -> str:
     return input("Enter the name of the catalogue: ")
 
+# Lists items
+def list_items(catalogues, name):
+    print("\nCurrent catalogue items:")
+    if catalogues[name]["items"]:
+        for i, item in enumerate(catalogues[name]["items"], start=1):
+            print(f"\n{i}. {item['name']}: \n{item['description']}")
+    else:
+        print("No items in this catalogue.")
+
 def list_catalogues():
     catalogues = load_catalogues()
     if not catalogues:
@@ -31,7 +40,6 @@ def create_catalogue():
     if name in catalogues:
         print("Catalogue already exists.")
         return
-    # Start with empty content or whatever you want the structure to be
     catalogues[name] = {"items": []}
     save_catalogues(catalogues)
     print(f"Catalogue '{name}' created.")
@@ -71,13 +79,10 @@ def view_catalogue():
         return
 
     while True:
-        print("\nCurrent catalogue items:")
-        if catalogues[name]["items"]:
-            for i, item in enumerate(catalogues[name]["items"], start=1):
-                print(f"\n{i}. {item['name']}: \n{item['description']}")
-        else:
-            print("No items in this catalogue.")
+        # Listing catalogue items
+        list_items(catalogues, name)
 
+        # Actions
         action = input("\nReturn to options? (y/n): ").lower()
         if action == "y":
             break
@@ -86,28 +91,26 @@ def view_catalogue():
         else:
             print("\nInvalid input. Please choose 'y' or 'n'.")
 
-
 def edit_catalogue():
     name, catalogues = choose_catalogue()
     if not name:
         return
 
     while True:
-        print("\nCurrent catalogue items:")
-        if catalogues[name]["items"]:
-            for i, item in enumerate(catalogues[name]["items"], start=1):
-                print(f"{i}. {item['name']}: {item['description']}")
-        else:
-            print("No items in this catalogue.")
+        # Listing catalogue items
+        list_items(catalogues, name)
 
-        action = input("\nAdd (a), Remove (r), Rename (e) an item, or Quit (q) editing catalogue: ").lower()
+        # Actions
+        action = input("\nAdd (a), Remove (r), Rename (e), or Quit (q)").lower()
+        # Adding item
         if action == 'a':
             item_name = input("Enter the item name to add: ")
             item_desc = input("Enter the item description: ")
             catalogues[name]["items"].append({"name": item_name, "description": item_desc})
             print(f"Item '{item_name}' added.")
+        # Removing an item
         elif action == 'r':
-            item_name = input("Enter the item name to remove: ")
+            item_name = input("Enter the item name to remove: ") # TODO Change name selection to number selection
             found = False
             for item in catalogues[name]["items"]:
                 if item["name"] == item_name:
@@ -117,8 +120,9 @@ def edit_catalogue():
                     break
             if not found:
                 print("Item not found in catalogue.")
+        # Editing an item
         elif action == 'e':
-            old_name = input("Enter the current item name to rename: ")
+            old_name = input("Enter the current item name to rename: ") # TODO Change name selection to number selection
             for item in catalogues[name]["items"]:
                 if item["name"] == old_name:
                     new_name = input("Enter the new name for the item: ")
@@ -127,6 +131,7 @@ def edit_catalogue():
                     break
             else:
                 print("Item not found in catalogue.")
+        # Exiting catalogue
         elif action == 'q':
             print("Finished editing catalogue.")
             break
@@ -135,7 +140,7 @@ def edit_catalogue():
 
     save_catalogues(catalogues)
 
-
+# Add new options with the same format
 options = {
     0 : {"desc" : "Exit", "func" : exit},
     1 : {"desc" : "List catalogues", "func" : list_catalogues},
@@ -145,6 +150,7 @@ options = {
     5 : {"desc" : "Edit an existing catalog", "func" : edit_catalogue}
 }
 
+# Whole program runs within this loop, each time a function exits the loop continues to run until the exit option '0' is chosen
 def print_options():
     while True:
         for x in sorted(options):
@@ -154,7 +160,6 @@ def print_options():
         except ValueError:
             print("Please enter a valid number.")
             continue
-
         if opt == 0:
             print("Exiting...")
             break
