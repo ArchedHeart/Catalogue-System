@@ -1,8 +1,6 @@
 # Cataloguing system
-This is designed to allow a user to create new catalogues and add objects with names and descriptions.
+This is a CLI application designed to allow a user to create new catalogues and add objects with names and descriptions linked to each catalogue.
 
 ## Progress
 - [x] Adding items with name and descriptions
-- [ ] Graphical User Interface
-- [ ] Flexibility to be used for library booking, student logging, other logging things
-- [ ] SQL Database, easy to customise to needs, easy to set up for different systems.
+- [ ] Make a web application version using rust, axum, askama, towerhttp.
